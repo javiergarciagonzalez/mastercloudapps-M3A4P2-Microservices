@@ -31,6 +31,6 @@ public class Comment {
     @ManyToOne
     private Book book;
     
-    @ManyToOne
-    private User user;
+    @Column(nullable = false)
+    private long userId;
 }

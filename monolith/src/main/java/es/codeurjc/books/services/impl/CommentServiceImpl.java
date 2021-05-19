@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
         User user = this.userRepository.findByNick(commentRequestDto.getUserNick()).orElseThrow(UserNotFoundException::new);
         Comment comment = this.mapper.map(commentRequestDto, Comment.class);
         comment.setBook(book);
-        comment.setUser(user);
+        comment.setUserId(user.getId());
         comment = this.commentRepository.save(comment);
         return this.mapper.map(comment, CommentResponseDto.class);
     }

@@ -15,24 +15,28 @@ import es.codeurjc.books.exceptions.UserCanNotBeDeletedException;
 import es.codeurjc.books.exceptions.UserNotFoundException;
 import es.codeurjc.books.exceptions.UserWithSameNickException;
 import es.codeurjc.books.models.User;
+import es.codeurjc.books.repositories.CommentRepository;
 import es.codeurjc.books.repositories.UserRepository;
 import es.codeurjc.books.services.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private Mapper mapper;
-    private UserRepository userRepository;
+      private Mapper mapper;
+  private UserRepository userRepository;
+  private CommentRepository commentRepository;
 
-    public UserServiceImpl(Mapper mapper, UserRepository userRepository) {
-        this.mapper = mapper;
-        this.userRepository = userRepository;
-    }
 
-    public Collection<UserResponseDto> findAll() {
+  public UserServiceImpl(Mapper mapper, UserRepository userRepository, CommentRepository commentRepository) {
+    this.mapper = mapper;
+    this.userRepository = userRepository;
+    this.commentRepository = commentRepository;
+  }
+
+    public Collection < UserResponseDto > findAll() {
         return this.userRepository.findAll().stream()
-                .map(user -> this.mapper.map(user, UserResponseDto.class))
-                .collect(Collectors.toList());
+            .map(user -> this.mapper.map(user, UserResponseDto.class))
+            .collect(Collectors.toList());
     }
 
     public UserResponseDto save(UserRequestDto userRequestDto) {
@@ -60,7 +64,8 @@ public class UserServiceImpl implements UserService {
 
     public UserResponseDto delete(long userId) {
         User user = this.userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        if (!isEmpty(user.getComments())) {
+
+        if (!isEmpty(commentRepository.findByUserId(userId))) {
             throw new UserCanNotBeDeletedException();
         }
         this.userRepository.delete(user);
