@@ -1515,7 +1515,7 @@
 		{
 			"id": "baseUrl",
 			"key": "baseUrl",
-			"value": "http://localhost:8080",
+			"value": "http://booksapp",
 			"type": "string"
 		}
 	],
